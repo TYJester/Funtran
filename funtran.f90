@@ -12,28 +12,93 @@
 !                                                     complex functions.                                                    !
 !---------------------------------------------------------------------------------------------------------------------------!
 
-module funtran.standlib
+module funtran_standlib
         implicit none
 
         integer, parameter :: dp = SELECTED_REAL_KIND(15, 300)
 
+        public arrayComp
+
+        private arrayCompInt, arrayCompReal, arrayCompChar
+
+        interface arrayComp
+                module procedure arrayCompInt, arrayCompReal, arrayCompChar
+        end interface arrayComp
+
         contains
 
 !---------------------------------------------------------------------------------------------------------------------------!
-! The arrayComp (Array Comparator) function is designed to take 2 array arguments (testArr, dict), and 1 character argument !
-!                                        (dataType). The result (res) is a boolean.                                         !
+!                The arrayComp (Array Comparator) function is designed to take 2 array arguments (testArr, dict).           !
+!                                               The result (res) is a boolean.                                              !
 !                                                                                                                           !
 !                                                                                                                           !
 ! - testArr (Array Type): The array who's content you want to check.                                                        !
 !                                                                                                                           !
 ! - dict (Array Type): The array that contains the characters you want to scan testArr for.                                 !
 !                                                                                                                           !
-! - dataType (Character Type): The data type of bothe testArr and dict.                                                     !
-!                                                                                                                           !
 ! - res (Boolean Type): The result of the function. If all characters in testArr are in dict, return TRUE, else FALSE.      !
 !---------------------------------------------------------------------------------------------------------------------------!
+        function arrayCompInt(testArr, dict) result(res)
+                integer, intent(IN) :: testArr(:), dict(:)
+                logical :: res, found
+                integer :: i, j
 
-                function arrayComp(testArr, dict, dataType) result(res)
-                        
-                end funtion arrayComp
-end module funtran.standlib
+                res = .TRUE.
+                do i = 1, size(testArr)
+                    found = .FALSE.
+                    do j = 1, size(dict)
+                        if (testArr(i) == dict(j)) then
+                            found = .TRUE.
+                            exit
+                        endif
+                    end do
+                    if (.NOT. found) then
+                        res = .FALSE.
+                        exit
+                    endif
+                end do
+        end function arrayCompInt
+
+        function arrayCompReal(testArr, dict) result(res)
+                real(kind=dp), intent(IN) :: testArr(:), dict(:)
+                logical :: res, found
+                integer :: i, j
+
+                res = .TRUE.
+                do i = 1, size(testArr)
+                    found = .FALSE.
+                    do j = 1, size(dict)
+                        if (testArr(i) == dict(j)) then
+                            found = .TRUE.
+                            exit
+                        endif
+                    end do
+                    if (.NOT. found) then
+                        res = .FALSE.
+                        exit
+                    endif
+                end do
+        end function arrayCompReal
+
+        function arrayCompChar(testArr, dict) result(res)
+                character(*), intent(IN) :: testArr(:), dict(:)
+                logical :: res, found
+                integer :: i, j
+
+                res = .TRUE.
+                do i = 1, size(testArr)
+                    found = .FALSE.
+                    do j = 1, size(dict)
+                        if (testArr(i) == dict(j)) then
+                            found = .TRUE.
+                            exit
+                        endif
+                    end do
+                    if (.NOT. found) then
+                        res = .FALSE.
+                        exit
+                    endif
+                end do
+        end function arrayCompChar
+
+end module funtran_standlib
