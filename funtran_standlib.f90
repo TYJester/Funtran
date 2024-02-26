@@ -217,10 +217,6 @@ module funtran_standlib
                 call infix%invert()
 
                 do i = 1, size(infix%arr)
-                        print *, infix%arr(i)%val
-                end do
-
-                do i = 1, size(infix%arr)
                         do j = 1, size(varArr, DIM = 2)
                                 if (infix%arr(i)%val == varArr(1, j)%val) then
                                         infix%arr(i)%val = varArr(2, j)%val
