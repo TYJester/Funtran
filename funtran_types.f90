@@ -79,13 +79,21 @@ module funtran_types
 !----------------------------------------------------------------------------------------------------------------------------------!
 
         contains
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                                 Init                                                             !
+!      Necessary to initialise a stack. Allocates the array component of the data type as a 1 dimensional array with length 1.     !
+!----------------------------------------------------------------------------------------------------------------------------------!
                 subroutine init(self)
                         class(stack) :: self
                         
                         allocate(self%arr(1))
                         allocate(self%bufferArr(1))
                 end subroutine init
-
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                                 Push                                                             !
+! Accepts a string as a parameter "input" and places it at the top of the stack. Functionally, array is stored in a buffer whilst  !
+!                            space is made to fit the new value at index 1 (i.e. the top of the stack).                            !
+!----------------------------------------------------------------------------------------------------------------------------------!
                 subroutine push(self, input)
                         class(stack) :: self
                         character (LEN = *) :: input
@@ -101,7 +109,10 @@ module funtran_types
 
                         self%bufferArr = self%arr
                 end subroutine push
-
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                                 Pop                                                              !
+!      Removes the value from the top of the stack. Functionally, stores the array in a buffer whilst reducing it's size by 1.     !
+!----------------------------------------------------------------------------------------------------------------------------------!
                 subroutine pop(self)
                         class(stack) :: self
 
@@ -115,14 +126,20 @@ module funtran_types
 
                         self%bufferArr = self%arr
                 end subroutine pop
-
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                                 Peek                                                             !
+!                                           Returns the top value from the stack as a string.                                      !
+!----------------------------------------------------------------------------------------------------------------------------------!
                 function peek(self) result(res)
                         class(stack) :: self
                         character (len = :), allocatable :: res
 
                         res = self%arr(1)%val
                 end function peek
-
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                               isEmpty                                                            !
+!        Returns TRUE if the stack is empty, FALSE if else. NOTE stack is empty when the array component has a length of 1.        !
+!----------------------------------------------------------------------------------------------------------------------------------!
                 function isEmpty(self) result(res)
                         class(stack) :: self
                         logical :: res
@@ -133,7 +150,10 @@ module funtran_types
                                 res = .FALSE.
                         end if
                 end function isEmpty
-
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                                Invert                                                            !
+!      Inverts the order of the stack, i.e. top of stack becomes bottom, etc. Functions by storing values in a buffer array.       !
+!----------------------------------------------------------------------------------------------------------------------------------!
                 subroutine invert(self)
                         class(stack) :: self
                         type(string), allocatable :: bufferArr(:)
@@ -151,7 +171,10 @@ module funtran_types
                                 call self%push(bufferArr(i)%val)
                         end do
                 end subroutine invert
-
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                                Clear                                                             !
+!      Empties the stack. Does this by deallocating internal arrays and them reallocating them in the same way as initilised.      !
+!----------------------------------------------------------------------------------------------------------------------------------!
                 subroutine clear(self)
                         class(stack) :: self
 
