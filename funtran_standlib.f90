@@ -194,6 +194,15 @@ module funtran_standlib
 
                 buffer%val = ''
 
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                              Step 1                                                              !
+! The function takes the string and cycles through it, following the following rules to create an INFIX stack:                     !
+!         - If numeric, substring is appended to buffer variable;                                                                  !
+!         - If minus sign and top of stack is operator, substring is appended to buffer variable;                                  !
+!         - Otherwise if first character in substring, push substring to stack;                                                    !
+!         - Otherwise if buffer variable is not empty, push buffer to stack, then push current substring to stack regardless.      !
+!----------------------------------------------------------------------------------------------------------------------------------!
+
                 do i = 1, len(func)
                         if (isNumeric(func(i:i)) .OR. func(i:i) == '.') then
                                 buffer%val = buffer%val // func(i:i)
@@ -216,6 +225,12 @@ module funtran_standlib
 
                 call infix%invert()
 
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                              Step 2                                                              !
+!  The function replaces all instances of variables/constants in the INFIX stack with the associated value by looping through the  !
+!                                         INFIX stack and the array of variables/constants.                                        !
+!----------------------------------------------------------------------------------------------------------------------------------!
+
                 do i = 1, size(infix%arr)
                         do j = 1, size(varArr, DIM = 2)
                                 if (infix%arr(i)%val == varArr(1, j)%val) then
@@ -237,6 +252,16 @@ module funtran_standlib
                                 end do
                         end do
                 end if
+
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                              Step 3                                                              !
+! The function converts the INFIX stack into a POSTFIX stack, which is easier to evaluate. the algorithm is as follows:            !
+!         - If is numeric (or a decimal point), push onto POSTFIX stack and pop from INFIX stack;                                  !
+!         - If is a left bracket, push onto operator stack and pop from INFIX stack;                                               !
+!         - If is a right bracket, consecutavely push from top of operator stack to POSTFIX stack until encounter left bracket;    !
+!         - If is operator, push to operator stack. If last top of operator stack has greater/equal precident, push it to POSTFIX; !
+!         - If INFIX stack is empty, but operator stack is not, push all from operator stack into POSTFIX stack.                   !
+!----------------------------------------------------------------------------------------------------------------------------------!
 
                 do i = 1, size(infix%arr) - 1
                         if (isNumeric(infix%peek()) .OR. infix%peek() == '.') then
@@ -311,6 +336,14 @@ module funtran_standlib
                 call stackObj%clear()
 
                 call postfix%invert()
+
+!----------------------------------------------------------------------------------------------------------------------------------!
+!                                                              Step 4                                                              !
+! The function then evaluates the POSTFIX stack. The algorithm is as follows:                                                      !
+!         - If is numeric, add to numeric stack;                                                                                   !
+!         - If is an operator, pop top two values from numeric stack, use the operator, and push the new value to the stack.       !
+! The final value is returned to the program.                                                                                      !
+!----------------------------------------------------------------------------------------------------------------------------------!
 
                 do i = 1, size(postfix%arr) - 1
                         if (isNumeric(postfix%peek())) then
