@@ -199,8 +199,6 @@ module funtran_standlib
                                 buffer%val = buffer%val // func(i:i)
                         else if (func(i:i) == '-' .AND. .NOT. isNumeric(infix%peek())) then
                                 buffer%val = buffer%val // func(i:i)
-                        else if (.NOT.isNumeric(func(i:i)) .AND. infix%peek() == '-') then
-                                buffer%val = buffer%val // func(i:i)
                         else
                                 if (i == 1) then
                                         call infix%push(func(i:i))
