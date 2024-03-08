@@ -20,4 +20,10 @@ module funtran_consts
 
         !e_ - Value of Euler's number
         real (KIND = dp), parameter :: e_ = exp(1.0_dp)
+
+        !h_ - Approximation for Planck's constant
+        real (KIND = dp), parameter :: h_ = 6.6260715e-34_dp
+
+        !hbar_ - Approximation for the reduced Planck's constant
+        real (KIND = dp), parameter :: hbar_ = h_/(2 * pi_)
 end module funtran_consts

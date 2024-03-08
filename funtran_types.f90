@@ -65,13 +65,15 @@ module funtran_types
                 type(string), dimension(:), allocatable :: arr, bufferArr
 
                 contains
-                        procedure :: init
-                        procedure :: push
-                        procedure :: pop
-                        procedure :: peek
-                        procedure :: isEmpty
-                        procedure :: invert
-                        procedure :: clear
+                        procedure :: init => init_stack
+                        procedure :: push => push_stack
+                        procedure :: pop => pop_stack
+                        procedure :: peek => peek_stack
+                        procedure :: isEmpty => isEmpty_stack
+                        procedure :: invert => invert_stack
+                        procedure :: clear => clear_stack
+                        procedure :: length => length_stack
+                        procedure :: concat => concat_stack
         end type stack
 
 !----------------------------------------------------------------------------------------------------------------------------------!
@@ -83,18 +85,18 @@ module funtran_types
 !                                                                 Init                                                             !
 !      Necessary to initialise a stack. Allocates the array component of the data type as a 1 dimensional array with length 1.     !
 !----------------------------------------------------------------------------------------------------------------------------------!
-                subroutine init(self)
+                subroutine init_stack(self)
                         class(stack) :: self
                         
                         allocate(self%arr(1))
                         allocate(self%bufferArr(1))
-                end subroutine init
+                end subroutine init_stack
 !----------------------------------------------------------------------------------------------------------------------------------!
 !                                                                 Push                                                             !
 ! Accepts a string as a parameter "input" and places it at the top of the stack. Functionally, array is stored in a buffer whilst  !
 !                            space is made to fit the new value at index 1 (i.e. the top of the stack).                            !
 !----------------------------------------------------------------------------------------------------------------------------------!
-                subroutine push(self, input)
+                subroutine push_stack(self, input)
                         class(stack) :: self
                         character (LEN = *) :: input
                         
@@ -108,12 +110,12 @@ module funtran_types
                         allocate(self%bufferArr(size(self%arr)))
 
                         self%bufferArr = self%arr
-                end subroutine push
+                end subroutine push_stack
 !----------------------------------------------------------------------------------------------------------------------------------!
 !                                                                 Pop                                                              !
 !      Removes the value from the top of the stack. Functionally, stores the array in a buffer whilst reducing it's size by 1.     !
 !----------------------------------------------------------------------------------------------------------------------------------!
-                subroutine pop(self)
+                subroutine pop_stack(self)
                         class(stack) :: self
 
                         deallocate(self%arr)
@@ -125,22 +127,22 @@ module funtran_types
                         allocate(self%bufferArr(size(self%arr)))
 
                         self%bufferArr = self%arr
-                end subroutine pop
+                end subroutine pop_stack
 !----------------------------------------------------------------------------------------------------------------------------------!
 !                                                                 Peek                                                             !
 !                                           Returns the top value from the stack as a string.                                      !
 !----------------------------------------------------------------------------------------------------------------------------------!
-                function peek(self) result(res)
+                function peek_stack(self) result(res)
                         class(stack) :: self
                         character (len = :), allocatable :: res
 
                         res = self%arr(1)%val
-                end function peek
+                end function peek_stack
 !----------------------------------------------------------------------------------------------------------------------------------!
 !                                                               isEmpty                                                            !
 !        Returns TRUE if the stack is empty, FALSE if else. NOTE stack is empty when the array component has a length of 1.        !
 !----------------------------------------------------------------------------------------------------------------------------------!
-                function isEmpty(self) result(res)
+                function isEmpty_stack(self) result(res)
                         class(stack) :: self
                         logical :: res
 
@@ -149,12 +151,12 @@ module funtran_types
                         else
                                 res = .FALSE.
                         end if
-                end function isEmpty
+                end function isEmpty_stack
 !----------------------------------------------------------------------------------------------------------------------------------!
 !                                                                Invert                                                            !
 !      Inverts the order of the stack, i.e. top of stack becomes bottom, etc. Functions by storing values in a buffer array.       !
 !----------------------------------------------------------------------------------------------------------------------------------!
-                subroutine invert(self)
+                subroutine invert_stack(self)
                         class(stack) :: self
                         type(string), allocatable :: bufferArr(:)
                         integer :: i
@@ -170,12 +172,12 @@ module funtran_types
                         do i = 1, size(bufferArr)
                                 call self%push(bufferArr(i)%val)
                         end do
-                end subroutine invert
+                end subroutine invert_stack
 !----------------------------------------------------------------------------------------------------------------------------------!
 !                                                                Clear                                                             !
 !      Empties the stack. Does this by deallocating internal arrays and them reallocating them in the same way as initilised.      !
 !----------------------------------------------------------------------------------------------------------------------------------!
-                subroutine clear(self)
+                subroutine clear_stack(self)
                         class(stack) :: self
 
                         deallocate(self%arr)
@@ -183,5 +185,25 @@ module funtran_types
 
                         allocate(self%arr(1))
                         allocate(self%bufferArr(1))
-                end subroutine clear
+                end subroutine clear_stack
+
+                function length_stack(self) result(res)
+                        class(stack) :: self
+                        integer :: res
+
+                        res = size(self%arr)
+                end function length_stack
+
+                function concat_stack(self) result(res)
+                        class(stack) :: self
+                        character (LEN = :), allocatable :: res
+                        integer :: i
+
+                        call self%invert()
+
+                        do i = 1, self%length()
+                                res = res // self%peek()
+                                call self%pop()
+                        end do
+                end function concat_stack
 end module funtran_types
