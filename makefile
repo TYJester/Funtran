@@ -36,7 +36,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.f90
 
 # Clean up
 clean:
-	rm -f $(OBJ_DIR)/*.o $(MOD_DIR)/*.mod $(LIB_DIR)/$(LIB_NAME)
+	rm -f $(OBJ_DIR)/*.o $(MOD_DIR)/*.mod
 
 # Phony targets
 .PHONY: all clean
