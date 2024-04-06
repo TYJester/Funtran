@@ -1,28 +1,34 @@
-#Compiler Config
+# Compiler settings
 FC = gfortran
 FFLAGS = -Wall -fcheck=all -J$(MOD_DIR)
 
-#Directories
+# Directories
 SRC_DIR = src
 MOD_DIR = include
 LIB_DIR = lib
 OBJ_DIR = $(LIB_DIR)/obj
 BIN_DIR = bin
 
-#Sources and Objects
-SOURCES = $(wildcard $(SRC_DIR)/*.f90)
-OBJECTS = $(patsubst $(SRC_DIR)/%.f90, $(OBJ_DIR)/%.o, $(SOURCES))
+# Object files with explicit dependencies
+OBJ_FUNTRAN_CONSTS = $(OBJ_DIR)/funtran_consts.o
+OBJ_FUNTRAN_TYPES = $(OBJ_DIR)/funtran_types.o
+OBJ_FUNTRAN_STANDLIB = $(OBJ_DIR)/funtran_standlib.o
 
-#Library Name
-LIB_NAME = funtran.a
+# Library name
+LIB_NAME = libyourfortranlibrary.a
 
+# Ensure modules compile in the correct order
+$(OBJ_FUNTRAN_TYPES): $(OBJ_FUNTRAN_CONSTS)
+$(OBJ_FUNTRAN_STANDLIB): $(OBJ_FUNTRAN_CONSTS) $(OBJ_FUNTRAN_TYPES)
+
+# Default target
 all: $(LIB_NAME)
 
-#Compile and create library
-$(LIB_NAME): $(OBJECTS)
-	ar rcs $(LIB_DIR)/$(LIB_NAME) $(OBJECTS)
+# Compile the Fortran modules and create the library
+$(LIB_NAME): $(OBJ_FUNTRAN_CONSTS) $(OBJ_FUNTRAN_TYPES) $(OBJ_FUNTRAN_STANDLIB)
+	ar rcs $(LIB_DIR)/$(LIB_NAME) $(OBJ_FUNTRAN_CONSTS) $(OBJ_FUNTRAN_TYPES) $(OBJ_FUNTRAN_STANDLIB)
 
-# Rule to compile Fortran source files
+# Generic rule for compiling Fortran source to object file
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.f90
 	@mkdir -p $(OBJ_DIR)
 	@mkdir -p $(MOD_DIR)
