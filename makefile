@@ -11,7 +11,7 @@ BIN_DIR = bin
 
 #Sources and Objects
 SOURCES = $(wildcard $(SRC_DIR)/*.f90)
-OBJECTS = $(patsubst $(SRC_DIR)/%.f90, $(OBJ_DIR)/%.f90, $(SOURCES))
+OBJECTS = $(patsubst $(SRC_DIR)/%.f90, $(OBJ_DIR)/%.o, $(SOURCES))
 
 #Library Name
 LIB_NAME = funtran.a
