@@ -1,6 +1,6 @@
 # Compiler settings
 FC = gfortran
-FFLAGS = -Wall -fcheck=all -J$(MOD_DIR)
+FFLAGS = -Wall -fcheck=all -J$(MOD_DIR) -I$(SRC_DIR)
 
 # Directories
 SRC_DIR = src
@@ -15,11 +15,7 @@ OBJ_FUNTRAN_TYPES = $(OBJ_DIR)/funtran_types.o
 OBJ_FUNTRAN_STANDLIB = $(OBJ_DIR)/funtran_standlib.o
 
 # Library name
-LIB_NAME = libyourfortranlibrary.a
-
-# Ensure modules compile in the correct order
-$(OBJ_FUNTRAN_TYPES): $(OBJ_FUNTRAN_CONSTS)
-$(OBJ_FUNTRAN_STANDLIB): $(OBJ_FUNTRAN_CONSTS) $(OBJ_FUNTRAN_TYPES)
+LIB_NAME = funtran.a
 
 # Default target
 all: $(LIB_NAME)

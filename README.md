@@ -7,9 +7,8 @@ Funtran is a modern fortran library containing some generic useful functions, de
 To install funtran, begin by cloning this repository, then build using the makefile.
 
 ```bash
-git clone https://github.com/WPLavery/Funtran.git
-
-make
+$ git clone https://github.com/WPLavery/Funtran.git
+$ make
 ```
 
 ## Compilation
@@ -17,7 +16,7 @@ make
 When compiling your fortran program, use the following syntax to ensure the library is linked.
 
 ```bash
-gfortran my_program.f90 -L/"path to repository"/lib -lfuntran -o my_program
+$ gfortran myProgram.f90 -J./Funtran/include -L./Funtran/lib -l:funtran.a -o myProgram
 ```
 
 ## Usage
