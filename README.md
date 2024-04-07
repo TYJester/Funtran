@@ -8,7 +8,7 @@ To install funtran, begin by cloning this repository, then build using the makef
 
 ```bash
 $ git clone https://github.com/WPLavery/Funtran.git
-$ make
+$ make -C ./Funtran
 ```
 
 ## Compilation
